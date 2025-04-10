@@ -1,0 +1,55 @@
+﻿# Binários e arquivos de build
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+*idea
+
+# Pastas de output
+/bin/
+/build/
+/dist/
+
+# Go modules cache (caso use em alguma pasta fora do go.mod)
+*.mod~
+*.sum~
+
+# Pasta vendor se não for usar vendoring explícito
+/vendor/
+
+# Arquivos de log
+*.log
+
+# Arquivos de ambiente
+.env
+.env.*
+
+# Arquivos temporários e de sistema operacional
+.DS_Store
+Thumbs.db
+
+# Arquivos e pastas criados por IDEs
+.idea/
+*.iml
+
+# Outros temporários
+*.swp
+*.swo
+
+# Cache do GoLand (workspace.xml, tasks.xml, etc.)
+.idea/*
+!.idea/inspectionProfiles
+!.idea/codeStyles
+!.idea/runConfigurations
+.idea/modules.xml
+.idea/vcs.xml
+.idea/.name
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/dictionaries
+
+# Cache do Go (tools como gopls, air, etc.)
+.cache/
