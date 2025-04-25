@@ -7,6 +7,8 @@ import (
 	"github.com/LacirJR/psygrow-api/src/internal/router"
 	"github.com/gin-gonic/gin"
 	"log"
+
+	_ "github.com/LacirJR/psygrow-api/docs"
 )
 
 func main() {

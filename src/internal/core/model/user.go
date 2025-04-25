@@ -10,7 +10,7 @@ type User struct {
 	Name         string    `gorm:"type:varchar(100);not null"`
 	Email        string    `gorm:"type:varchar(100);uniqueIndex;not null"`
 	PasswordHash string    `gorm:"type:varchar(255);not null"`
-	Role         string    `gorm:"type:varchar(50);default:'professional';not null"`
+	Role         string    `gorm:"type:varchar(50);default:professional;not null"`
 	Phone        *string   `gorm:"type:varchar(20)"`
 	IsActive     bool      `gorm:"default:true"`
 	CreatedAt    time.Time `gorm:"autoCreateTime"`

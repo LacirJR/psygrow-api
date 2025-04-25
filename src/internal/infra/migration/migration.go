@@ -11,6 +11,17 @@ func Migrate() {
 
 	err := db.AutoMigrate(
 		&model.User{},
+		&model.AnamneseTemplate{},
+		&model.AnamneseField{},
+		&model.PatientAnamnese{},
+		&model.PatientAnamneseField{},
+		&model.Appointment{},
+		&model.Session{},
+		&model.Evolution{},
+		&model.CostCenter{},
+		&model.Payment{},
+		&model.PaymentAppointment{},
+		&model.Repasse{},
 	)
 
 	if err != nil {
