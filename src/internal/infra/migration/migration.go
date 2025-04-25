@@ -22,6 +22,9 @@ func Migrate() {
 		&model.Payment{},
 		&model.PaymentAppointment{},
 		&model.Repasse{},
+		&model.Lead{},
+		&model.Patient{},
+		&model.PatientFamily{},
 	)
 
 	if err != nil {

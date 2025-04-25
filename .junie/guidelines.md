@@ -286,3 +286,132 @@ Define o valor que o profissional precisa repassar à clínica ou instituição.
 ---
 
 
+## 📦 Entidades e Relacionamentos
+
+---
+
+## **lead**
+Pré-cadastro de uma pessoa interessada em iniciar atendimento. Pode ser convertida em paciente.
+
+| Campo            | Tipo      | Descrição                                                                 |
+|------------------|-----------|---------------------------------------------------------------------------|
+| id               | uuid      | Identificador único do lead                                               |
+| user_id          | uuid FK   | Profissional que fez o atendimento/conversa                               |
+| full_name        | string    | Nome da pessoa                                                            |
+| phone            | string?   | Telefone de contato                                                       |
+| email            | string?   | E-mail (opcional)                                                         |
+| birth_date       | date?     | Data de nascimento (opcional)                                             |
+| contact_date     | datetime  | Data da conversa ou triagem inicial                                       |
+| status           | string    | `new`, `in_analysis`, `converted`, `lost`                                 |
+| was_attended     | bool      | Se já passou por triagem ou conversa inicial                              |
+| converted_at     | datetime? | Data de conversão em paciente (se aplicável)                              |
+| notes            | text?     | Anotações sobre a conversa, objetivos, possíveis encaminhamentos          |
+| origin           | string?   | Origem do contato (Instagram, indicação, site etc.)                       |
+| gdpr_block_contact | bool    | Se o lead não autoriza contato futuro (LGPD/GDPR compliance)              |
+| created_at       | datetime  | Data de criação                                                           |
+| updated_at       | datetime  | Última atualização                                                        |
+
+---
+
+## **patient**
+Paciente com atendimento ativo ou anterior. Pode vir de um `lead`.
+
+| Campo                  | Tipo      | Descrição                                                                 |
+|------------------------|-----------|---------------------------------------------------------------------------|
+| id                     | uuid      | Identificador único do paciente                                           |
+| user_id                | uuid FK   | Profissional responsável pelo paciente                                    |
+| cost_center_id         | uuid FK   | Origem padrão do atendimento do paciente                                  |
+| full_name              | string    | Nome completo                                                             |
+| social_name            | string?   | Nome social (opcional)                                                    |
+| birth_date             | date      | Data de nascimento                                                        |
+| document               | string?   | Documento (CPF, RG etc.)                                                  |
+| phone                  | string?   | Telefone (WhatsApp, celular)                                              |
+| email                  | string?   | E-mail de contato                                                         |
+| gender                 | string?   | Gênero                                                                    |
+| address                | string?   | Endereço                                                                  |
+| resides_with           | string?   | Com quem o paciente reside (pai, mãe, ambos, avós, etc.)                  |
+| emergency_contact_name | string?   | Nome da pessoa para contato de emergência                                 |
+| emergency_contact_phone| string?   | Telefone do contato de emergência                                         |
+| observation            | text?     | Observações clínicas ou administrativas                                   |
+| default_repasse_type   | string?   | `percent` ou `fixed` (regra personalizada de repasse)                     |
+| default_repasse_value  | decimal?  | Valor ou percentual do repasse personalizado                              |
+| active                 | bool      | Se o paciente está ativo                                                  |
+| created_at             | datetime  | Data de criação                                                           |
+| updated_at             | datetime  | Última atualização                                                        |
+
+---
+
+## **patient_family**
+Relação de membros familiares do paciente (útil para menores ou acompanhamento do sistema familiar).
+
+| Campo        | Tipo      | Descrição                                                   |
+|--------------|-----------|--------------------------------------------------------------|
+| id           | uuid      | Identificador único                                          |
+| patient_id   | uuid FK   | Vínculo com o paciente                                       |
+| relationship | string    | Parentesco: `pai`, `mãe`, `cônjuge`, `filho`, `responsável` |
+| name         | string    | Nome do familiar                                             |
+| birth_date   | date?     | Data de nascimento (opcional)                                |
+| schooling    | string?   | Escolaridade (opcional)                                      |
+| occupation   | string?   | Ocupação profissional (opcional)                             |
+
+
+---
+
+## 🔁 Regras de Conversão de Lead para Paciente
+
+1. Leads representam possíveis pacientes que passaram por triagem ou conversa inicial.
+2. Leads podem ser convertidos manualmente para pacientes com um clique.
+3. Ao converter:
+    - Cria-se um `patient` com os dados preenchidos no `lead`.
+    - O campo `lead.status` é atualizado para `converted`.
+    - O campo `lead.converted_at` é preenchido.
+    - O `lead` pode ser mantido para histórico e estatísticas.
+4. O profissional pode registrar observações, origem, e notas durante o período de análise do lead.
+5. Após convertido, o `patient` passa a participar de todos os fluxos do sistema (agendamento, sessão, evolução, pagamento, etc.)
+
+---
+
+## 💸 Regras de Pagamento de Leads (triagem paga)
+
+1. Um `lead` pode realizar um atendimento prévio (ex: triagem ou conversa inicial), com ou sem cobrança.
+2. Se for cobrada, o pagamento deve ser registrado na tabela `payment` como **pagamento avulso**:
+    - O campo `patient_id` deve ser `null`, pois o vínculo ainda não existe.
+    - O campo `lead_id` pode ser usado para vincular diretamente ao lead.
+    - O campo `notes` pode complementar com texto identificador (ex: "Triagem - Maria Oliveira").
+    - O campo `cost_center_id` pode apontar para um centro como "Triagem" ou "Particular".
+3. O pagamento avulso **não gera agendamento** e **não cria sessão**.
+4. Se o lead for convertido posteriormente, os pagamentos podem ser consultados com base no `lead_id`.
+5. Pagamentos feitos por leads são incluídos nos relatórios financeiros como **recebimentos não vinculados a paciente fixo**.
+
+---
+
+## 🧠 Regras de Visualização e Uso
+
+1. Leads devem ter uma tela de listagem separada da lista de pacientes.
+2. A conversão para paciente deve preservar os dados e adicionar apenas os campos obrigatórios de `patient`.
+3. Leads não aparecem no calendário de agendamentos (exceto se for implementado agendamento de triagem).
+4. É possível filtrar os leads por:
+    - Origem de contato
+    - Status (`new`, `in_analysis`, `converted`, `lost`)
+    - Data de contato
+    - Leads com `was_attended = true` (triagem realizada)
+5. O sistema deve permitir registrar observações contínuas durante o status `in_analysis`.
+6. Leads com `gdpr_block_contact = true` devem ser respeitados em comunicações automáticas.
+7. Leads inativos por muito tempo podem ser anonimizados, arquivados ou removidos.
+8. A ficha do paciente deve permitir visualizar:
+    - Dados de residência
+    - Contato de emergência
+    - Composição familiar (usando `patient_family`)
+
+---
+
+## 📊 Benefícios e Relatórios
+
+- Relatório de leads por origem: quantos vieram de Instagram, indicação etc.
+- Taxa de conversão de leads para pacientes
+- Valor total recebido em triagens/consultas iniciais
+- Histórico de decisões clínicas (por que não houve continuidade)
+- Registro clínico inicia **apenas após conversão**, mantendo a base de pacientes limpa
+- Permite segmentar pacientes por **canal de aquisição**, **interesse**, **potencial de fidelização**
+- Permite controlar leads que realizaram triagem, pagaram, e decidiram não continuar
+- Suporte completo a pacientes crianças ou dependentes, com estrutura familiar clara

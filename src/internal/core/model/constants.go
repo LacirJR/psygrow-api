@@ -34,3 +34,23 @@ const (
 	RepasseStatusPaid          = "paid"
 	RepasseStatusInformational = "informational"
 )
+
+// LeadStatus defines the lead status constants
+const (
+	LeadStatusNew        = "new"
+	LeadStatusInAnalysis = "in_analysis"
+	LeadStatusConverted  = "converted"
+	LeadStatusLost       = "lost"
+)
+
+// PatientFamilyRelationship defines the relationship constants
+const (
+	RelationshipFather      = "pai"
+	RelationshipMother      = "mãe"
+	RelationshipSpouse      = "cônjuge"
+	RelationshipChild       = "filho"
+	RelationshipResponsible = "responsável"
+	RelationshipGrandparent = "avô/avó"
+	RelationshipSibling     = "irmão/irmã"
+	RelationshipOther       = "outro"
+)

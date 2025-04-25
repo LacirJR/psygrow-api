@@ -30,7 +30,7 @@ func (a *Appointment) Validate() error {
 	validate := validator.New()
 
 	// Custom validation for CustomRepasseValue based on CustomRepasseType
-	validate.RegisterValidation("custom_repasse_value_valid", func(fl validator.FieldLevel) bool {
+	err := validate.RegisterValidation("custom_repasse_value_valid", func(fl validator.FieldLevel) bool {
 		// Get the parent struct
 		appointment, ok := fl.Parent().Interface().(Appointment)
 		if !ok {
@@ -57,43 +57,9 @@ func (a *Appointment) Validate() error {
 		return *appointment.CustomRepasseValue >= 0
 	})
 
+	if err != nil {
+		return err
+	}
+
 	return validate.Struct(a)
-}
-
-// Session represents an actual session that occurred when an appointment is marked as done
-type Session struct {
-	ID             uuid.UUID   `gorm:"type:uuid;default:uuid_generate_v4();primaryKey"`
-	AppointmentID  uuid.UUID   `gorm:"type:uuid;not null;index" validate:"required"`
-	Appointment    Appointment `gorm:"foreignKey:AppointmentID"`
-	UserID         uuid.UUID   `gorm:"type:uuid;not null;index" validate:"required"`
-	PatientID      uuid.UUID   `gorm:"type:uuid;not null;index" validate:"required"`
-	ProfessionalID uuid.UUID   `gorm:"type:uuid;not null;index" validate:"required"`
-	StartTime      time.Time   `gorm:"not null" validate:"required"`
-	EndTime        time.Time   `gorm:"not null" validate:"required,gtfield=StartTime"`
-	WasAttended    bool        `gorm:"default:true"`
-	CreatedAt      time.Time   `gorm:"autoCreateTime"`
-}
-
-// Validate performs validation on the Session struct
-func (s *Session) Validate() error {
-	validate := validator.New()
-	return validate.Struct(s)
-}
-
-// Evolution represents clinical notes generated only if the session was conducted
-type Evolution struct {
-	ID             uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4();primaryKey"`
-	SessionID      uuid.UUID `gorm:"type:uuid;not null;index" validate:"required"`
-	Session        Session   `gorm:"foreignKey:SessionID"`
-	UserID         uuid.UUID `gorm:"type:uuid;not null;index" validate:"required"`
-	ProfessionalID uuid.UUID `gorm:"type:uuid;not null;index" validate:"required"`
-	PatientID      uuid.UUID `gorm:"type:uuid;not null;index" validate:"required"`
-	Content        string    `gorm:"type:text;not null" validate:"required,min=1"`
-	CreatedAt      time.Time `gorm:"autoCreateTime"`
-}
-
-// Validate performs validation on the Evolution struct
-func (e *Evolution) Validate() error {
-	validate := validator.New()
-	return validate.Struct(e)
 }

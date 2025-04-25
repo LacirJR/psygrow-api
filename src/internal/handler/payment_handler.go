@@ -33,6 +33,18 @@ func CreatePayment(c *gin.Context) {
 		return
 	}
 
+	// Validate payment method
+	validMethod := false
+	switch req.Method {
+	case model.PaymentMethodPix, model.PaymentMethodCash, model.PaymentMethodCard, model.PaymentMethodOther:
+		validMethod = true
+	}
+
+	if !validMethod {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Método de pagamento inválido"})
+		return
+	}
+
 	// Parse cost center ID
 	costCenterID, err := uuid.Parse(req.CostCenterID)
 	if err != nil {
@@ -251,6 +263,18 @@ func CreateRepasse(c *gin.Context) {
 		return
 	}
 
+	// Validate repasse status
+	validStatus := false
+	switch req.Status {
+	case model.RepasseStatusPending, model.RepasseStatusPaid, model.RepasseStatusInformational:
+		validStatus = true
+	}
+
+	if !validStatus {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Status de repasse inválido"})
+		return
+	}
+
 	// Parse IDs
 	appointmentID, err := uuid.Parse(req.AppointmentID)
 	if err != nil {
@@ -402,10 +426,22 @@ func UpdateRepasseStatus(c *gin.Context) {
 
 	// Update repasse status
 	if req.Status != nil {
+		// Validate repasse status
+		validStatus := false
+		switch *req.Status {
+		case model.RepasseStatusPending, model.RepasseStatusPaid, model.RepasseStatusInformational:
+			validStatus = true
+		}
+
+		if !validStatus {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Status de repasse inválido"})
+			return
+		}
+
 		repasse.Status = *req.Status
 
 		// Set paid date if status is "paid"
-		if *req.Status == "paid" {
+		if *req.Status == model.RepasseStatusPaid {
 			now := time.Now()
 			repasse.PaidAt = &now
 		}

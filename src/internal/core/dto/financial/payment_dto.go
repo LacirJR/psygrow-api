@@ -11,7 +11,7 @@ type PaymentRequest struct {
 	CostCenterID   string    `json:"cost_center_id" binding:"required,uuid"`
 	PaymentDate    time.Time `json:"payment_date" binding:"required"`
 	Amount         int64     `json:"amount" binding:"required,gt=0"`
-	Method         string    `json:"method" binding:"required"`
+	Method         string    `json:"method" binding:"required"` // TODO: Use constants from model.PaymentMethod*
 	Notes          string    `json:"notes"`
 	AppointmentIDs []string  `json:"appointment_ids,omitempty" binding:"omitempty,dive,uuid"`
 }

@@ -11,7 +11,7 @@ type RepasseRequest struct {
 	CostCenterID   string     `json:"cost_center_id" binding:"required,uuid"`
 	Value          int64      `json:"value" binding:"required,gt=0"`
 	ClinicReceives bool       `json:"clinic_receives"`
-	Status         string     `json:"status" binding:"required,oneof=pending paid informational"`
+	Status         string     `json:"status" binding:"required,oneof=pending paid informational"` // TODO: Use constants from model.RepasseStatus*
 	PaidAt         *time.Time `json:"paid_at,omitempty"`
 	Notes          string     `json:"notes"`
 }

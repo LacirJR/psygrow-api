@@ -16,13 +16,6 @@ func RegisterRoutes(r *gin.Engine) {
 	{
 		v1 := api.Group("/v1")
 		{
-			// Public routes
-			users := v1.Group("/users")
-			{
-				users.POST("", handler.RegisterUser)
-				users.GET("/:email", handler.GetUserByEmail)
-			}
-
 			auth := v1.Group("/auth")
 			{
 				auth.POST("/login", handler.Login)
@@ -32,6 +25,13 @@ func RegisterRoutes(r *gin.Engine) {
 			protected := v1.Group("")
 			protected.Use(middleware.AuthMiddleware())
 			{
+
+				users := v1.Group("/users")
+				{
+					users.POST("", handler.RegisterUser)
+					users.GET("/:email", handler.GetUserByEmail)
+				}
+
 				// Anamnese routes
 				anamnese := protected.Group("/anamnese")
 				{
@@ -87,6 +87,40 @@ func RegisterRoutes(r *gin.Engine) {
 
 					// Get evolutions by patient
 					protected.GET("/patients/:patient_id/evolutions", handler.GetEvolutionsByPatient)
+				}
+
+				// Patient routes
+				patients := protected.Group("/patients")
+				{
+					patients.POST("", handler.CreatePatient)
+					patients.GET("", handler.GetPatients)
+					patients.GET("/:patient_id", handler.GetPatient)
+					patients.PUT("/:patient_id", handler.UpdatePatient)
+					patients.DELETE("/:patient_id", handler.DeletePatient)
+					patients.GET("/search", handler.SearchPatientsByName)
+					patients.GET("/cost-center/:cost_center_id", handler.GetPatientsByCostCenter)
+
+					// Patient family routes
+					families := patients.Group("/:patient_id/families")
+					{
+						families.POST("", handler.CreatePatientFamily)
+						families.GET("", handler.GetPatientFamilies)
+						families.GET("/:id", handler.GetPatientFamily)
+						families.PUT("/:id", handler.UpdatePatientFamily)
+						families.DELETE("/:id", handler.DeletePatientFamily)
+						families.GET("/relationship/:relationship", handler.GetPatientFamiliesByRelationship)
+					}
+				}
+
+				// Lead routes
+				leads := protected.Group("/leads")
+				{
+					leads.POST("", handler.CreateLead)
+					leads.GET("", handler.GetLeads)
+					leads.GET("/:id", handler.GetLead)
+					leads.PUT("/:id", handler.UpdateLead)
+					leads.DELETE("/:id", handler.DeleteLead)
+					leads.POST("/:id/convert", handler.ConvertLeadToPatient)
 				}
 
 				// Financial routes
