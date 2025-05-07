@@ -25,7 +25,6 @@
 
 # Arquivos de ambiente
 .env
-.env.*
 
 # Arquivos temporários e de sistema operacional
 .DS_Store

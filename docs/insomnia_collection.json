@@ -1,0 +1,444 @@
+﻿{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2023-06-15T10:00:00.000Z",
+  "__export_source": "insomnia.desktop.app:v2023.5.8",
+  "resources": [
+    {
+      "_id": "req_root",
+      "parentId": "wrk_psygrow",
+      "modified": 1686823200000,
+      "created": 1686823200000,
+      "url": "{{ base_url }}",
+      "name": "Root",
+      "description": "",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "_type": "request"
+    },
+    {
+      "_id": "wrk_psygrow",
+      "parentId": null,
+      "modified": 1686823200000,
+      "created": 1686823200000,
+      "name": "PsyGrow API",
+      "description": "API para gerenciamento de consultório psicológico",
+      "scope": "collection",
+      "_type": "workspace"
+    },
+    {
+      "_id": "env_base",
+      "parentId": "wrk_psygrow",
+      "modified": 1686823200000,
+      "created": 1686823200000,
+      "name": "Base Environment",
+      "data": {
+        "base_url": "http://localhost:8080/api/v1",
+        "token": ""
+      },
+      "dataPropertyOrder": {
+        "&": [
+          "base_url",
+          "token"
+        ]
+      },
+      "color": null,
+      "isPrivate": false,
+      "metaSortKey": 1686823200000,
+      "_type": "environment"
+    },
+    {
+      "_id": "jar_cookies",
+      "parentId": "wrk_psygrow",
+      "modified": 1686823200000,
+      "created": 1686823200000,
+      "name": "Default Jar",
+      "cookies": [],
+      "_type": "cookie_jar"
+    },
+    {
+      "_id": "fld_auth",
+      "parentId": "wrk_psygrow",
+      "modified": 1686823200000,
+      "created": 1686823200000,
+      "name": "Auth",
+      "description": "",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1000,
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_login",
+      "parentId": "fld_auth",
+      "modified": 1686823200000,
+      "created": 1686823200000,
+      "url": "{{ base_url }}/auth/login",
+      "name": "Login",
+      "description": "Autentica um usuário e retorna um token JWT",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n\t\"email\": \"usuario@exemplo.com\",\n\t\"password\": \"senha123\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "_type": "request"
+    },
+    {
+      "_id": "fld_users",
+      "parentId": "wrk_psygrow",
+      "modified": 1686823200000,
+      "created": 1686823200000,
+      "name": "Users",
+      "description": "",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -900,
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_create_user",
+      "parentId": "fld_users",
+      "modified": 1686823200000,
+      "created": 1686823200000,
+      "url": "{{ base_url }}/users",
+      "name": "Create User",
+      "description": "Cria um novo usuário no sistema",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n\t\"name\": \"Nome Completo\",\n\t\"email\": \"usuario@exemplo.com\",\n\t\"password\": \"senha123\",\n\t\"role\": \"professional\",\n\t\"phone\": \"(11) 98765-4321\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "_type": "request"
+    },
+    {
+      "_id": "req_get_users",
+      "parentId": "fld_users",
+      "modified": 1686823200000,
+      "created": 1686823200000,
+      "url": "{{ base_url }}/users",
+      "name": "Get Users",
+      "description": "Lista todos os usuários",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ token }}"
+      },
+      "_type": "request"
+    },
+    {
+      "_id": "req_get_user",
+      "parentId": "fld_users",
+      "modified": 1686823200000,
+      "created": 1686823200000,
+      "url": "{{ base_url }}/users/123e4567-e89b-12d3-a456-426614174000",
+      "name": "Get User",
+      "description": "Obtém detalhes de um usuário específico",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ token }}"
+      },
+      "_type": "request"
+    },
+    {
+      "_id": "req_update_user",
+      "parentId": "fld_users",
+      "modified": 1686823200000,
+      "created": 1686823200000,
+      "url": "{{ base_url }}/users/123e4567-e89b-12d3-a456-426614174000",
+      "name": "Update User",
+      "description": "Atualiza dados de um usuário",
+      "method": "PUT",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n\t\"name\": \"Nome Atualizado\",\n\t\"phone\": \"(11) 91234-5678\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ token }}"
+      },
+      "_type": "request"
+    },
+    {
+      "_id": "fld_patients",
+      "parentId": "wrk_psygrow",
+      "modified": 1686823200000,
+      "created": 1686823200000,
+      "name": "Patients",
+      "description": "",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -800,
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_create_patient",
+      "parentId": "fld_patients",
+      "modified": 1686823200000,
+      "created": 1686823200000,
+      "url": "{{ base_url }}/patients",
+      "name": "Create Patient",
+      "description": "Cadastra um novo paciente",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n\t\"name\": \"Nome do Paciente\",\n\t\"email\": \"paciente@exemplo.com\",\n\t\"phone\": \"(11) 98765-4321\",\n\t\"birth_date\": \"1990-01-01\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ token }}"
+      },
+      "_type": "request"
+    },
+    {
+      "_id": "req_get_patients",
+      "parentId": "fld_patients",
+      "modified": 1686823200000,
+      "created": 1686823200000,
+      "url": "{{ base_url }}/patients",
+      "name": "Get Patients",
+      "description": "Lista todos os pacientes",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ token }}"
+      },
+      "_type": "request"
+    },
+    {
+      "_id": "fld_appointments",
+      "parentId": "wrk_psygrow",
+      "modified": 1686823200000,
+      "created": 1686823200000,
+      "name": "Appointments",
+      "description": "",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -700,
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_create_appointment",
+      "parentId": "fld_appointments",
+      "modified": 1686823200000,
+      "created": 1686823200000,
+      "url": "{{ base_url }}/appointments",
+      "name": "Create Appointment",
+      "description": "Agenda um novo atendimento",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n\t\"patient_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n\t\"service_title\": \"Psicoterapia\",\n\t\"start_time\": \"2023-06-20T14:00:00Z\",\n\t\"end_time\": \"2023-06-20T15:00:00Z\",\n\t\"notes\": \"Primeira consulta\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ token }}"
+      },
+      "_type": "request"
+    },
+    {
+      "_id": "req_get_appointments",
+      "parentId": "fld_appointments",
+      "modified": 1686823200000,
+      "created": 1686823200000,
+      "url": "{{ base_url }}/appointments",
+      "name": "Get Appointments",
+      "description": "Lista todos os agendamentos",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "name": "start_date",
+          "value": "2023-06-01"
+        },
+        {
+          "name": "end_date",
+          "value": "2023-06-30"
+        }
+      ],
+      "headers": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ token }}"
+      },
+      "_type": "request"
+    },
+    {
+      "_id": "fld_anamnese",
+      "parentId": "wrk_psygrow",
+      "modified": 1686823200000,
+      "created": 1686823200000,
+      "name": "Anamnese",
+      "description": "",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -600,
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_create_anamnese_template",
+      "parentId": "fld_anamnese",
+      "modified": 1686823200000,
+      "created": 1686823200000,
+      "url": "{{ base_url }}/anamnese/templates",
+      "name": "Create Anamnese Template",
+      "description": "Cria um novo modelo de anamnese",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n\t\"title\": \"Anamnese Psicológica Adulto\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ token }}"
+      },
+      "_type": "request"
+    },
+    {
+      "_id": "req_add_anamnese_field",
+      "parentId": "fld_anamnese",
+      "modified": 1686823200000,
+      "created": 1686823200000,
+      "url": "{{ base_url }}/anamnese/templates/123e4567-e89b-12d3-a456-426614174000/fields",
+      "name": "Add Anamnese Field",
+      "description": "Adiciona um campo ao modelo de anamnese",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n\t\"field_number\": 1,\n\t\"field_type\": \"text\",\n\t\"field_title\": \"Queixa principal\",\n\t\"field_required\": true\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ token }}"
+      },
+      "_type": "request"
+    },
+    {
+      "_id": "fld_financial",
+      "parentId": "wrk_psygrow",
+      "modified": 1686823200000,
+      "created": 1686823200000,
+      "name": "Financial",
+      "description": "",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -500,
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_create_cost_center",
+      "parentId": "fld_financial",
+      "modified": 1686823200000,
+      "created": 1686823200000,
+      "url": "{{ base_url }}/cost-centers",
+      "name": "Create Cost Center",
+      "description": "Cria um novo centro de custo",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n\t\"name\": \"Clínica X\",\n\t\"repasse_model\": \"professional_pays\",\n\t\"repasse_type\": \"percent\",\n\t\"repasse_value\": 30\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ token }}"
+      },
+      "_type": "request"
+    },
+    {
+      "_id": "req_register_payment",
+      "parentId": "fld_financial",
+      "modified": 1686823200000,
+      "created": 1686823200000,
+      "url": "{{ base_url }}/payments",
+      "name": "Register Payment",
+      "description": "Registra um novo pagamento",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n\t\"patient_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n\t\"cost_center_id\": \"123e4567-e89b-12d3-a456-426614174001\",\n\t\"payment_date\": \"2023-06-15T10:00:00Z\",\n\t\"amount\": 150.00,\n\t\"method\": \"pix\",\n\t\"notes\": \"Pagamento da sessão\",\n\t\"appointment_ids\": [\"123e4567-e89b-12d3-a456-426614174002\"]\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ token }}"
+      },
+      "_type": "request"
+    }
+  ]
+}
