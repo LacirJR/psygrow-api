@@ -81,7 +81,7 @@ func (r *anamneseFieldRepository) FindByID(id string) (*model.AnamneseField, err
 		return nil, err
 	}
 
-	err = r.db.Where("id = ?", fieldID).First(&field).Error
+	err = r.db.Where("id = ?", fieldID).Preload("Options").First(&field).Error
 	if err != nil {
 		return nil, err
 	}
@@ -95,7 +95,7 @@ func (r *anamneseFieldRepository) FindByAnamneseID(anamneseID string) ([]*model.
 		return nil, err
 	}
 
-	err = r.db.Where("anamnese_id = ?", parsedAnamneseID).Order("field_number").Find(&fields).Error
+	err = r.db.Where("anamnese_id = ?", parsedAnamneseID).Preload("Options").Order("field_number").Find(&fields).Error
 	if err != nil {
 		return nil, err
 	}
@@ -168,6 +168,73 @@ func (r *patientAnamneseRepository) FindByUserID(userID string) ([]*model.Patien
 		return nil, err
 	}
 	return patientAnamneses, nil
+}
+
+// AnamneseFieldOptionRepository implementation
+type anamneseFieldOptionRepository struct {
+	db *gorm.DB
+}
+
+func NewAnamneseFieldOptionRepository(db *gorm.DB) port.AnamneseFieldOptionRepository {
+	return &anamneseFieldOptionRepository{db: db}
+}
+
+func (r *anamneseFieldOptionRepository) Save(option *model.AnamneseFieldOption) error {
+	return r.db.Create(option).Error
+}
+
+func (r *anamneseFieldOptionRepository) SaveBulk(options []*model.AnamneseFieldOption) error {
+	return r.db.Create(options).Error
+}
+
+func (r *anamneseFieldOptionRepository) FindByID(id string) (*model.AnamneseFieldOption, error) {
+	var option model.AnamneseFieldOption
+	optionID, err := uuid.Parse(id)
+	if err != nil {
+		return nil, err
+	}
+
+	err = r.db.Where("id = ?", optionID).First(&option).Error
+	if err != nil {
+		return nil, err
+	}
+	return &option, nil
+}
+
+func (r *anamneseFieldOptionRepository) FindByAnamneseFieldID(anamneseFieldID string) ([]*model.AnamneseFieldOption, error) {
+	var options []*model.AnamneseFieldOption
+	parsedAnamneseFieldID, err := uuid.Parse(anamneseFieldID)
+	if err != nil {
+		return nil, err
+	}
+
+	err = r.db.Where("anamnese_field_id = ?", parsedAnamneseFieldID).Order("option_order").Find(&options).Error
+	if err != nil {
+		return nil, err
+	}
+	return options, nil
+}
+
+func (r *anamneseFieldOptionRepository) Update(option *model.AnamneseFieldOption) error {
+	return r.db.Save(option).Error
+}
+
+func (r *anamneseFieldOptionRepository) Delete(id string) error {
+	optionID, err := uuid.Parse(id)
+	if err != nil {
+		return err
+	}
+
+	return r.db.Delete(&model.AnamneseFieldOption{}, optionID).Error
+}
+
+func (r *anamneseFieldOptionRepository) DeleteByAnamneseFieldID(anamneseFieldID string) error {
+	parsedAnamneseFieldID, err := uuid.Parse(anamneseFieldID)
+	if err != nil {
+		return err
+	}
+
+	return r.db.Where("anamnese_field_id = ?", parsedAnamneseFieldID).Delete(&model.AnamneseFieldOption{}).Error
 }
 
 // PatientAnamneseFieldRepository implementation

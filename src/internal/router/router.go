@@ -4,13 +4,9 @@ import (
 	"github.com/LacirJR/psygrow-api/src/internal/handler"
 	"github.com/LacirJR/psygrow-api/src/internal/middleware"
 	"github.com/gin-gonic/gin"
-	swaggerFiles "github.com/swaggo/files"
-	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func RegisterRoutes(r *gin.Engine) {
-
-	r.GET("swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	api := r.Group("/api")
 	{
@@ -50,6 +46,14 @@ func RegisterRoutes(r *gin.Engine) {
 							fields.GET("", handler.GetAnamneseFields)
 							fields.PUT("/:field_id", handler.UpdateAnamneseField)
 							fields.DELETE("/:field_id", handler.DeleteAnamneseField)
+
+							// Anamnese field option routes
+							options := fields.Group("/:field_id/options")
+							{
+								options.POST("", handler.CreateAnamneseFieldOption)
+								options.POST("/bulk", handler.CreateAnamneseFieldOptionsBulk)
+								options.GET("", handler.GetAnamneseFieldOptions)
+							}
 						}
 					}
 
@@ -59,6 +63,29 @@ func RegisterRoutes(r *gin.Engine) {
 						patientAnamnese.POST("", handler.CreatePatientAnamnese)
 						patientAnamnese.GET("/:patient_id", handler.GetPatientAnamneses)
 						patientAnamnese.GET("/:patient_id/details", handler.GetPatientAnamneseDetails)
+					}
+				}
+
+				// Patient routes
+				patients := protected.Group("/patients")
+				{
+					patients.POST("", handler.CreatePatient)
+					patients.GET("", handler.GetPatients)
+					patients.GET("/:patient_id", handler.GetPatient)
+					patients.PUT("/:patient_id", handler.UpdatePatient)
+					patients.DELETE("/:patient_id", handler.DeletePatient)
+					patients.GET("/search", handler.SearchPatientsByName)
+					patients.GET("/cost-center/:cost_center_id", handler.GetPatientsByCostCenter)
+
+					// Patient family routes
+					families := patients.Group("/:patient_id/families")
+					{
+						families.POST("", handler.CreatePatientFamily)
+						families.GET("", handler.GetPatientFamilies)
+						families.GET("/:id", handler.GetPatientFamily)
+						families.PUT("/:id", handler.UpdatePatientFamily)
+						families.DELETE("/:id", handler.DeletePatientFamily)
+						families.GET("/relationship/:relationship", handler.GetPatientFamiliesByRelationship)
 					}
 				}
 
@@ -87,29 +114,6 @@ func RegisterRoutes(r *gin.Engine) {
 
 					// Get evolutions by patient
 					protected.GET("/patients/:patient_id/evolutions", handler.GetEvolutionsByPatient)
-				}
-
-				// Patient routes
-				patients := protected.Group("/patients")
-				{
-					patients.POST("", handler.CreatePatient)
-					patients.GET("", handler.GetPatients)
-					patients.GET("/:patient_id", handler.GetPatient)
-					patients.PUT("/:patient_id", handler.UpdatePatient)
-					patients.DELETE("/:patient_id", handler.DeletePatient)
-					patients.GET("/search", handler.SearchPatientsByName)
-					patients.GET("/cost-center/:cost_center_id", handler.GetPatientsByCostCenter)
-
-					// Patient family routes
-					families := patients.Group("/:patient_id/families")
-					{
-						families.POST("", handler.CreatePatientFamily)
-						families.GET("", handler.GetPatientFamilies)
-						families.GET("/:id", handler.GetPatientFamily)
-						families.PUT("/:id", handler.UpdatePatientFamily)
-						families.DELETE("/:id", handler.DeletePatientFamily)
-						families.GET("/relationship/:relationship", handler.GetPatientFamiliesByRelationship)
-					}
 				}
 
 				// Lead routes

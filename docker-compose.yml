@@ -1,0 +1,47 @@
+﻿services:
+  api:
+    container_name: psygrow-api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - APP_PORT=${APP_PORT}
+      - DB_HOST=${DB_HOST}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - DB_PORT=${DB_PORT}
+      - JWT_SECRET=${JWT_SECRET}
+      - DEFAULT_ADMIN_EMAIL=${DEFAULT_ADMIN_EMAIL}
+      - DEFAULT_ADMIN_PASSWORD=${DEFAULT_ADMIN_PASSWORD}
+      - DEFAULT_ADMIN_NAME=${DEFAULT_ADMIN_NAME}
+      - DEFAULT_ADMIN_ROLE=${DEFAULT_ADMIN_ROLE}
+    depends_on:
+      - postgres
+    restart: unless-stopped
+    networks:
+      - psygrow-network
+
+  postgres:
+    container_name: postgrespsygrow
+    image: postgres:15-alpine
+    ports:
+      - "5532:5432"
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    restart: unless-stopped
+    networks:
+      - psygrow-network
+
+volumes:
+  postgres-data:
+
+networks:
+  psygrow-network:
+    driver: bridge

@@ -13,6 +13,7 @@ func Migrate() {
 		&model.User{},
 		&model.AnamneseTemplate{},
 		&model.AnamneseField{},
+		&model.AnamneseFieldOption{},
 		&model.PatientAnamnese{},
 		&model.PatientAnamneseField{},
 		&model.Appointment{},

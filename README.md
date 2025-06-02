@@ -1,5 +1,30 @@
 ﻿# PsyGrow API - Model Improvements
 
+## Docker Setup
+
+### Prerequisites
+- Docker and Docker Compose installed on your machine
+
+### Running with Docker Compose
+1. Clone the repository
+2. Navigate to the project directory
+3. Run the application using Docker Compose:
+   ```bash
+   docker-compose up -d
+   ```
+4. The API will be available at http://localhost:8080
+5. The PostgreSQL database will be available at localhost:5432
+
+### Environment Variables
+The following environment variables are used by the application and are set in the docker-compose.yml file:
+- `APP_PORT`: The port on which the API server runs
+- `DB_HOST`: PostgreSQL database host
+- `DB_USER`: PostgreSQL database user
+- `DB_PASSWORD`: PostgreSQL database password
+- `DB_NAME`: PostgreSQL database name
+- `DB_PORT`: PostgreSQL database port
+- `JWT_SECRET`: Secret key for JWT token generation/validation
+
 ## Changes Implemented
 
 ### 1. Enumerations for Fixed Values
