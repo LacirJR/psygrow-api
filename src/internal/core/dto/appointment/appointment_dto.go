@@ -8,7 +8,7 @@ import (
 // AppointmentRequest represents the request to create a new appointment
 type AppointmentRequest struct {
 	PatientID          string    `json:"patient_id" binding:"required,uuid"`
-	ProfessionalID     string    `json:"professional_id" binding:"required,uuid"`
+	ProfessionalID     *string   `json:"professional_id,omitempty" binding:"omitempty,uuid"`
 	CostCenterID       string    `json:"cost_center_id" binding:"required,uuid"`
 	ServiceTitle       string    `json:"service_title" binding:"required"`
 	StartTime          time.Time `json:"start_time" binding:"required"`

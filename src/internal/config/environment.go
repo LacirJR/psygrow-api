@@ -18,7 +18,7 @@ func GetEnvironment(key string) string {
 func LoadEnv() {
 	dir, err := os.Getwd()
 	if err != nil {
-		log.Fatalf("Erro ao obter o diretório atual: %v", err)
+		log.Printf("Aviso: Erro ao obter o diretório atual: %v", err)
 	}
 
 	for {
@@ -27,7 +27,7 @@ func LoadEnv() {
 		if _, err := os.Stat(envPath); err == nil {
 			err = godotenv.Load(envPath)
 			if err != nil {
-				log.Fatalf("Erro ao carregar .env: %v", err)
+				log.Printf("Aviso: Erro ao carregar .env: %v", err)
 			}
 			log.Printf(".env carregado de: %s", envPath)
 			return
@@ -40,5 +40,5 @@ func LoadEnv() {
 		dir = parent
 	}
 
-	log.Fatal("Arquivo .env não encontrado em nenhum diretório pai")
+	log.Printf("Arquivo .env não encontrado em nenhum diretório pai")
 }

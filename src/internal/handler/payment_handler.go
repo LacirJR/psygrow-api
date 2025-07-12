@@ -13,17 +13,9 @@ import (
 
 // CreatePayment handles the creation of a new payment
 func CreatePayment(c *gin.Context) {
-	// Get user ID from context (set by auth middleware)
-	userID, exists := c.Get("user_id")
-	if !exists {
+	userID, error := getUserIDFromToken(c)
+	if error != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "User ID not found in context"})
-		return
-	}
-
-	// Parse user ID
-	parsedUserID, err := uuid.Parse(userID.(string))
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Invalid user ID format"})
 		return
 	}
 
@@ -58,7 +50,7 @@ func CreatePayment(c *gin.Context) {
 	// Create payment model
 	payment := &model.Payment{
 		ID:           paymentID,
-		UserID:       parsedUserID,
+		UserID:       userID,
 		CostCenterID: costCenterID,
 		PaymentDate:  req.PaymentDate,
 		Amount:       req.Amount,

@@ -14,16 +14,9 @@ import (
 // CreateAppointment handles the creation of a new appointment
 func CreateAppointment(c *gin.Context) {
 	// Get user ID from context (set by auth middleware)
-	userID, exists := c.Get("user_id")
-	if !exists {
+	userID, error := getUserIDFromToken(c)
+	if error != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "User ID not found in context"})
-		return
-	}
-
-	// Parse user ID
-	clientID, err := uuid.Parse(userID.(string))
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Invalid user ID format"})
 		return
 	}
 
@@ -40,10 +33,16 @@ func CreateAppointment(c *gin.Context) {
 		return
 	}
 
-	professionalID, err := uuid.Parse(req.ProfessionalID)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid professional ID format"})
-		return
+	var professionalID uuid.UUID
+
+	if req.ProfessionalID != nil {
+		professionalID, err = uuid.Parse(*req.ProfessionalID)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid professional ID format"})
+			return
+		}
+	} else {
+		professionalID = userID
 	}
 
 	costCenterID, err := uuid.Parse(req.CostCenterID)
@@ -62,9 +61,9 @@ func CreateAppointment(c *gin.Context) {
 	// Create appointment model
 	appointment := &model.Appointment{
 		ID:             appointmentID,
-		UserID:         clientID,
-		PatientID:      patientID,
+		UserID:         userID,
 		ProfessionalID: professionalID,
+		PatientID:      patientID,
 		CostCenterID:   costCenterID,
 		ServiceTitle:   req.ServiceTitle,
 		StartTime:      startTime,
@@ -75,7 +74,6 @@ func CreateAppointment(c *gin.Context) {
 		UpdatedAt:      time.Now(),
 	}
 
-	// Set custom repasse values if provided
 	if req.CustomRepasseType != nil {
 		appointment.CustomRepasseType = req.CustomRepasseType
 	}
@@ -110,16 +108,9 @@ func CreateAppointment(c *gin.Context) {
 // GetAppointments returns all appointments for the authenticated user
 func GetAppointments(c *gin.Context) {
 	// Get user ID from context (set by auth middleware)
-	userID, exists := c.Get("user_id")
-	if !exists {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "User ID not found in context"})
-		return
-	}
-
-	// Parse user ID
-	clientID, err := uuid.Parse(userID.(string))
+	userID, err := getUserIDFromToken(c)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Invalid user ID format"})
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Não autorizado"})
 		return
 	}
 
@@ -127,7 +118,7 @@ func GetAppointments(c *gin.Context) {
 	repo := repository.NewAppointmentRepository(config.DB)
 
 	// Get appointments
-	appointments, err := repo.FindByUserID(clientID.String())
+	appointments, err := repo.FindByUserID(userID.String())
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch appointments", "details": err.Error()})
 		return

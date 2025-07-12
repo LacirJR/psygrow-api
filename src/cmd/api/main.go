@@ -5,10 +5,9 @@ import (
 	"github.com/LacirJR/psygrow-api/src/internal/config"
 	"github.com/LacirJR/psygrow-api/src/internal/infra/migration"
 	"github.com/LacirJR/psygrow-api/src/internal/router"
+	"github.com/LacirJR/psygrow-api/src/internal/seed"
 	"github.com/gin-gonic/gin"
 	"log"
-
-	_ "github.com/LacirJR/psygrow-api/docs"
 )
 
 func main() {
@@ -21,6 +20,9 @@ func main() {
 
 	//Aplicar migrações
 	migration.Migrate()
+
+	//Criar usuario padrao
+	seed.CreateDefaultAdminUser()
 
 	//Registrar rotas
 	app := gin.Default()

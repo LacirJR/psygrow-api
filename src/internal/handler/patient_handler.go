@@ -67,7 +67,7 @@ func CreatePatient(c *gin.Context) {
 
 // GetPatient gets a patient by ID
 func GetPatient(c *gin.Context) {
-	id, err := uuid.Parse(c.Param("id"))
+	id, err := uuid.Parse(c.Param("patient_id"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "ID inválido"})
 		return
@@ -132,7 +132,7 @@ func GetPatients(c *gin.Context) {
 
 // UpdatePatient updates a patient
 func UpdatePatient(c *gin.Context) {
-	id, err := uuid.Parse(c.Param("id"))
+	id, err := uuid.Parse(c.Param("patient_id"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "ID inválido"})
 		return
@@ -194,7 +194,7 @@ func UpdatePatient(c *gin.Context) {
 
 // DeletePatient deletes a patient
 func DeletePatient(c *gin.Context) {
-	id, err := uuid.Parse(c.Param("id"))
+	id, err := uuid.Parse(c.Param("patient_id"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "ID inválido"})
 		return

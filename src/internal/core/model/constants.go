@@ -45,12 +45,12 @@ const (
 
 // PatientFamilyRelationship defines the relationship constants
 const (
-	RelationshipFather      = "pai"
-	RelationshipMother      = "mãe"
-	RelationshipSpouse      = "cônjuge"
-	RelationshipChild       = "filho"
-	RelationshipResponsible = "responsável"
-	RelationshipGrandparent = "avô/avó"
-	RelationshipSibling     = "irmão/irmã"
-	RelationshipOther       = "outro"
+	RelationshipFather      = "father"
+	RelationshipMother      = "mother"
+	RelationshipSpouse      = "spouse"
+	RelationshipChild       = "child"
+	RelationshipResponsible = "guardian" // Ou "responsible_party", mas "guardian" é comum para responsável legal.
+	RelationshipGrandparent = "grandparent"
+	RelationshipSibling     = "sibling"
+	RelationshipOther       = "other"
 )

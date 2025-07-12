@@ -95,7 +95,7 @@ func GetPatientFamily(c *gin.Context) {
 	patientRepo := repository.NewPatientRepository(config.DB)
 	_, err = patientRepo.FindByID(patientFamily.PatientID, userID)
 	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Não autorizado a acessar este familiar"})
+		c.JSON(http.StatusNotFound, gin.H{"error": "Familiar do paciente não encontrado"})
 		return
 	}
 
@@ -187,7 +187,7 @@ func UpdatePatientFamily(c *gin.Context) {
 	patientRepo := repository.NewPatientRepository(config.DB)
 	_, err = patientRepo.FindByID(patientFamily.PatientID, userID)
 	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Não autorizado a acessar este familiar"})
+		c.JSON(http.StatusNotFound, gin.H{"error": "Familiar do paciente não encontrado"})
 		return
 	}
 
@@ -234,7 +234,7 @@ func DeletePatientFamily(c *gin.Context) {
 	patientRepo := repository.NewPatientRepository(config.DB)
 	_, err = patientRepo.FindByID(patientFamily.PatientID, userID)
 	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Não autorizado a acessar este familiar"})
+		c.JSON(http.StatusNotFound, gin.H{"error": "Familiar do paciente não encontrado"})
 		return
 	}
 

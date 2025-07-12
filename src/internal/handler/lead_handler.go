@@ -269,7 +269,7 @@ func getPaginationParams(c *gin.Context) (int, int) {
 
 // Helper function to get user ID from token
 func getUserIDFromToken(c *gin.Context) (uuid.UUID, error) {
-	userIDStr, exists := c.Get("userID")
+	userIDStr, exists := c.Get("user_id")
 	if !exists {
 		return uuid.Nil, ErrUserIDNotFound
 	}

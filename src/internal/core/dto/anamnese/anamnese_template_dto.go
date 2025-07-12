@@ -11,9 +11,10 @@ type AnamneseTemplateRequest struct {
 
 // AnamneseTemplateResponse represents the response for an anamnese template
 type AnamneseTemplateResponse struct {
-	ID     string `json:"id"`
-	Title  string `json:"title"`
-	UserID string `json:"user_id"`
+	ID     string                   `json:"id"`
+	Title  string                   `json:"title"`
+	UserID string                   `json:"user_id"`
+	Fields *[]AnamneseFieldResponse `json:"fields"`
 }
 
 // NewAnamneseTemplateResponse creates a new AnamneseTemplateResponse from the given parameters

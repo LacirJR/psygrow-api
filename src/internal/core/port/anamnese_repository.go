@@ -18,6 +18,16 @@ type AnamneseFieldRepository interface {
 	Delete(id string) error
 }
 
+type AnamneseFieldOptionRepository interface {
+	Save(option *model.AnamneseFieldOption) error
+	SaveBulk(options []*model.AnamneseFieldOption) error
+	FindByID(id string) (*model.AnamneseFieldOption, error)
+	FindByAnamneseFieldID(anamneseFieldID string) ([]*model.AnamneseFieldOption, error)
+	Update(option *model.AnamneseFieldOption) error
+	Delete(id string) error
+	DeleteByAnamneseFieldID(anamneseFieldID string) error
+}
+
 type PatientAnamneseRepository interface {
 	Save(patientAnamnese *model.PatientAnamnese) error
 	FindByID(id string) (*model.PatientAnamnese, error)
