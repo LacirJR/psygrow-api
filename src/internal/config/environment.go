@@ -15,6 +15,13 @@ func GetEnvironment(key string) string {
 	return ""
 }
 
+func GetEnvironmentWithDefault(key, defaultValue string) string {
+	if value, ok := os.LookupEnv(key); ok {
+		return value
+	}
+	return defaultValue
+}
+
 func LoadEnv() {
 	dir, err := os.Getwd()
 	if err != nil {
