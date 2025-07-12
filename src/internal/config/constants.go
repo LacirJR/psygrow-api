@@ -8,4 +8,5 @@ const (
 	DbName       = "DB_NAME"
 	DbPort       = "DB_PORT"
 	JwtSecretKey = "JWT_SECRET"
+	SslMode      = "SSL_MODE"
 )
