@@ -35,8 +35,14 @@ func RegisterRoutes(r *gin.Engine) {
 				protectedAuth := auth.Group("")
 				{
 					protectedAuth.Use(middleware.AuthMiddleware())
-					protectedAuth.GET("/verify", handler.VerifyAuth)
+					{
+						verify := auth.Group("/verify")
+						{
+							verify.GET("", handler.VerifyAuth)
+						}
+					}
 				}
+
 			}
 
 			// Protected routes
