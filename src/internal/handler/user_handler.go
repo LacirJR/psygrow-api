@@ -117,6 +117,10 @@ func Login(c *gin.Context) {
 
 }
 
+func VerifyAuth(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{})
+}
+
 func generateJWT(user model.User) (string, error) {
 	// Define as claims do token conforme especificação
 	claims := jwt.MapClaims{

@@ -31,6 +31,12 @@ func RegisterRoutes(r *gin.Engine) {
 			auth := v1.Group("/auth")
 			{
 				auth.POST("/login", handler.Login)
+
+				protectedAuth := auth.Group("")
+				{
+					protectedAuth.Use(middleware.AuthMiddleware())
+					protectedAuth.GET("/verify", handler.VerifyAuth)
+				}
 			}
 
 			// Protected routes
